@@ -3,12 +3,6 @@ import { getWinnerReels } from "@/lib/supabase/winner_reels";
 import ClientReels from "@/components/client-reels";
 import { Button } from "@/components/button";
 
-export const metadata: Metadata = {
-  title: "Create Your Coffee Recipe | SmartBrew",
-  description:
-    "Generate the perfect coffee recipe tailored to your beans, equipment, and taste profile.",
-};
-
 export default async function CreateRecipe() {
   const initialReels = await getWinnerReels(24, 0);
 

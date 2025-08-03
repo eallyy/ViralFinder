@@ -2,31 +2,32 @@ import { ApplicationLayout } from '@/components/application-layout'
 import type { Metadata } from 'next'
 
 export const metadata: Metadata = {
-  title: {
-    default: "SmartBrew - Elevate Your Coffee Brewing Experience",
-    template: "%s | SmartBrew",
-  },
-  description: "Personalized coffee recipes, brewing guides, and more ‚Äì all tailored to your taste preferences.",
+  title: "Viral Finder | Trendella",
+  description:
+    "Instagram'da öne çıkan, yüksek etkileşimli içerikleri keşfedin. Viral Finder ile sektörde trend olan içerikleri anlık olarak analiz edin.",
   openGraph: {
-    title: "SmartBrew - Elevate Your Coffee Brewing Experience",
-    description: "Personalized coffee recipes, brewing guides, and more ‚Äì all tailored to your taste preferences.",
-    url: "https://smartbrew.co",
-    siteName: "SmartBrew",
+    title: "Viral Finder | Trendella",
+    description:
+      "Instagram'da yüksek performans gösteren Reels içeriklerini anlık takip edin. Trendleri kaçırmayın.",
+    url: "https://trendella.com/viral-finder",
+    siteName: "Trendella",
     images: [
       {
-        url: "https://smartbrew.co/og-image-app.jpg",
+        url: "https://trendella.com/og-image.jpg", // varsayılan bir görsel URL’si, değiştirilebilir
         width: 1200,
         height: 630,
-        alt: "SmartBrew App",
+        alt: "Trendella Viral Finder",
       },
     ],
+    locale: "tr_TR",
     type: "website",
   },
   twitter: {
     card: "summary_large_image",
-    title: "SmartBrew - Elevate Your Coffee Brewing Experience",
-    description: "Personalized coffee recipes, brewing guides, and more ‚Äì all tailored to your taste preferences.",
-    images: ["https://smartbrew.co/twitter-app.jpg"],
+    title: "Viral Finder | Trendella",
+    description:
+      "Instagram'ın en çok izlenen Reels içeriklerini analiz edin. Viral olan ürünleri kaçırmayın.",
+    images: ["https://trendella.com/og-image.jpg"],
   },
 };
 
