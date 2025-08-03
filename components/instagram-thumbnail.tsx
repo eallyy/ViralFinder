@@ -1,0 +1,160 @@
+"use client"
+
+import { useState, useEffect } from "react"
+import { Loader2, Play, Instagram } from "lucide-react"
+
+interface InstagramThumbnailProps {
+  url: string
+  username: string
+  className?: string
+  alt?: string
+  showPlayIcon?: boolean
+  tag?: string
+  image?: string
+}
+
+function extractInstagramShortcode(url: string): string | null {
+  const patterns = [
+    /instagram\.com\/p\/([A-Za-z0-9_-]+)/,
+    /instagram\.com\/reel\/([A-Za-z0-9_-]+)/,
+    /instagram\.com\/tv\/([A-Za-z0-9_-]+)/,
+    /instagram\.com\/[^/]+\/reel\/([A-Za-z0-9_-]+)/,
+    /instagram\.com\/[^/]+\/p\/([A-Za-z0-9_-]+)/,
+  ]
+  for (const pattern of patterns) {
+    const match = url.match(pattern)
+    if (match) return match[1]
+  }
+  return null
+}
+
+function generateGradient(username: string, category: string): string {
+  const gradients = [
+    "from-purple-600 via-pink-600 to-red-500",
+    "from-blue-600 via-purple-600 to-indigo-800",
+    "from-emerald-400 via-cyan-400 to-blue-500",
+    "from-yellow-400 via-red-500 to-pink-500",
+    "from-green-400 via-blue-500 to-purple-600",
+    "from-pink-500 via-red-500 to-yellow-500",
+    "from-indigo-500 via-purple-500 to-pink-500",
+    "from-cyan-400 via-blue-500 to-indigo-600",
+    "from-orange-400 via-pink-400 to-red-500",
+    "from-teal-400 via-cyan-500 to-blue-600",
+    "from-rose-400 via-pink-500 to-purple-600",
+    "from-amber-400 via-orange-500 to-red-600",
+    "from-lime-400 via-green-500 to-emerald-600",
+    "from-violet-500 via-purple-600 to-indigo-700",
+    "from-fuchsia-500 via-pink-600 to-rose-600",
+    "from-sky-400 via-blue-500 to-indigo-600",
+    "from-emerald-500 via-teal-600 to-cyan-700",
+    "from-red-500 via-pink-600 to-purple-700",
+    "from-orange-500 via-red-600 to-pink-700",
+    "from-blue-500 via-indigo-600 to-purple-700",
+  ]
+
+  const str = username + category
+  let hash = 0
+  for (let i = 0; i < str.length; i++) {
+    const char = str.charCodeAt(i)
+    hash = (hash << 5) - hash + char
+    hash = hash & hash
+  }
+  const index = Math.abs(hash) % gradients.length
+  return gradients[index]
+}
+
+export function InstagramThumbnail({
+  url,
+  username,
+  tag,
+  className = "",
+  alt,
+  image,
+}: InstagramThumbnailProps) {
+  const [loading, setLoading] = useState<boolean>(true)
+  const [imageLoaded, setImageLoaded] = useState<boolean>(false)
+
+  const category = extractInstagramShortcode(url) || "default"
+  const gradientClass = generateGradient(username, category)
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setLoading(false)
+    }, 800)
+    return () => clearTimeout(timer)
+  }, [category])
+
+  useEffect(() => {
+    if (!image) return
+    const img = new Image()
+    img.src = image
+    img.onload = () => setImageLoaded(true)
+    img.onerror = () => setImageLoaded(false)
+  }, [image])
+
+  if (loading) {
+    return (
+      <div className={`relative bg-gray-100 rounded-lg overflow-hidden ${className}`}>
+        <div className="aspect-square flex items-center justify-center">
+          <div className="flex flex-col items-center gap-2">
+            <Loader2 className="w-6 h-6 animate-spin text-gray-400" />
+            <span className="text-xs text-gray-500">Yükleniyor...</span>
+          </div>
+        </div>
+      </div>
+    )
+  }
+
+  if (image && imageLoaded) {
+    return (
+      <div className={`relative rounded-lg overflow-hidden aspect-[2/3] ${className}`}>
+        <img
+          src={image}
+          alt={alt || "Instagram thumbnail"}
+          className="w-full h-full object-cover"
+        />
+
+        {/* Overlay */}
+        <div className="absolute inset-0 bg-black/30 flex flex-col justify-center items-center text-white z-10">
+          <div className="w-20 h-20 mb-3 bg-white/20 rounded-full flex items-center justify-center backdrop-blur-[1px] border border-white/30 shadow-lg">
+               <Play className="w-10 h-10 text-white ml-1 drop-shadow-lg" />
+          </div>
+          <p className="text-xl font-bold mb-2 drop-shadow-md">@{username}</p>
+          {tag && (
+            <p className="text-xs opacity-70 font-mono bg-black/70 px-2 py-1 rounded border border-white/20">
+              {tag}
+            </p>
+          )}
+        </div>
+      </div>
+    )
+  }
+
+  // Gradient fallback
+  return (
+    <div className={`relative bg-gradient-to-br ${gradientClass} rounded-lg overflow-hidden ${className}`}>
+      <div className="aspect-[2/3] flex items-center justify-center text-white relative">
+        <div className="absolute inset-0 opacity-20">
+          <div className="absolute top-4 left-4 w-8 h-8 border-2 border-white rounded-lg animate-pulse"></div>
+          <div className="absolute top-6 left-6 w-4 h-4 bg-white rounded-full animate-bounce delay-100"></div>
+          <div className="absolute bottom-4 right-4 w-6 h-6 border border-white rounded-full animate-pulse delay-200"></div>
+          <div className="absolute bottom-8 right-8 w-3 h-3 bg-white rounded-sm animate-bounce delay-300"></div>
+          <div className="absolute top-1/2 left-2 w-2 h-2 bg-white rounded-full animate-ping delay-500"></div>
+          <div className="absolute top-8 right-8 w-2 h-2 bg-white rounded-full animate-ping delay-700"></div>
+        </div>
+
+        <div className="text-center p-4 relative z-10">
+          <div className="w-20 h-20 mx-auto mb-4 bg-white/20 rounded-full flex items-center justify-center backdrop-blur-sm border border-white/30 shadow-lg">
+              <Play className="w-10 h-10 text-white ml-1 drop-shadow-lg" />
+          </div>
+          <p className="text-xl font-bold mb-2 drop-shadow-md">@{username}</p>
+          {tag && (
+            <p className="text-xs opacity-70 font-mono bg-white/10 px-2 py-1 rounded border border-white/20">
+              {tag}
+            </p>
+          )}
+        </div>
+      </div>
+    </div>
+  )
+}
