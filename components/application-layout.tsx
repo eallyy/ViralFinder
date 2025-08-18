@@ -12,16 +12,19 @@ import { Sidebar, SidebarBody, SidebarHeader, SidebarItem, SidebarLabel, Sidebar
 import { StackedLayout } from '@/components/stacked-layout'
 import {
   ArrowRightStartOnRectangleIcon,
-  ChevronDownIcon,
   Cog8ToothIcon,
   LightBulbIcon,
-  PlusIcon,
+  QuestionMarkCircleIcon,
   ShieldCheckIcon,
   UserIcon,
 } from '@heroicons/react/16/solid'
 import { InboxIcon, MagnifyingGlassIcon } from '@heroicons/react/20/solid'
 import Logo from '@/components/logo'
 
+const navItems = [
+  { label: 'Anasayfa', url: '/' },
+  { label: 'Editörün Seçtikleri', url: '/editors-pick' },
+]
 
 export async function ApplicationLayout({ 
     children
@@ -29,14 +32,28 @@ export async function ApplicationLayout({
     children: React.ReactNode
 }) {
   return (
-    <StackedLayout
+  <StackedLayout
       navbar={
-        <Navbar className="flex items-center">
-          <div className="h-10">
+        <Navbar>
+          <div className="mt-3 ml-3 lg:ml-0">
             <Logo />
           </div>
+          <NavbarDivider className="max-lg:hidden" />
+          <NavbarSection className="max-lg:hidden">
+            {navItems.map(({ label, url }) => (
+              <NavbarItem key={label} href={url}>
+                {label}
+              </NavbarItem>
+            ))}
+          </NavbarSection>
           <NavbarSpacer />
           <NavbarSection>
+            <NavbarItem href="/search" aria-label="Search">
+              <MagnifyingGlassIcon />
+            </NavbarItem>
+            <NavbarItem href="/inbox" aria-label="Inbox">
+              <InboxIcon />
+            </NavbarItem>
             <Dropdown>
               <DropdownButton as={NavbarItem}>
                 <Avatar src="/user.png" />
@@ -51,6 +68,10 @@ export async function ApplicationLayout({
                   <LightBulbIcon />
                   <DropdownLabel>Geri Bildirim</DropdownLabel>
                 </DropdownItem>
+                <DropdownItem href="/share-feedback">
+                  <QuestionMarkCircleIcon />
+                  <DropdownLabel>Yardım</DropdownLabel>
+                </DropdownItem>
                 <DropdownDivider />
                 <DropdownItem href="/logout">
                   <ArrowRightStartOnRectangleIcon />
@@ -61,8 +82,25 @@ export async function ApplicationLayout({
           </NavbarSection>
         </Navbar>
       }
+      sidebar={
+        <Sidebar>
+          <SidebarHeader>
+          <div className="mt-3">
+            <Logo />
+          </div>
+          </SidebarHeader>
+          <SidebarBody>
+            <SidebarSection>
+              {navItems.map(({ label, url }) => (
+                <SidebarItem key={label} href={url}>
+                  {label}
+                </SidebarItem>
+              ))}
+            </SidebarSection>
+          </SidebarBody>
+        </Sidebar>
+      }
     >
       {children}
-    </StackedLayout>
-  )
+    </StackedLayout>)
 }
